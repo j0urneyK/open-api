@@ -2,6 +2,7 @@ package porcelain
 
 import (
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/netlify/open-api/v2/go/models"
@@ -52,10 +53,10 @@ func (n *Netlify) DeleteSite(ctx context.Context, siteID string) error {
 }
 
 // CreateSite creates a new site.
-func (n *Netlify) CreateSite(ctx context.Context, site *models.SiteSetup, configureDNS bool) (*models.Site, error) {
+func (n *Netlify) CreateSite(ctx context.Context, site *models.SiteSetup, configureDNS bool, httpClient *http.Client) (*models.Site, error) {
 	authInfo := context.GetAuthInfo(ctx)
 
-	params := operations.NewCreateSiteParams().WithSite(site).WithConfigureDNS(&configureDNS)
+	params := operations.NewCreateSiteParamsWithHTTPClient(httpClient).WithSite(site).WithConfigureDNS(&configureDNS)
 	resp, err := n.Netlify.Operations.CreateSite(params, authInfo)
 	if err != nil {
 		return nil, err
