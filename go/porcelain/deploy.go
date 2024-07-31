@@ -180,9 +180,9 @@ func (n *Netlify) overCommitted(d *deployFiles) bool {
 }
 
 // GetDeploy returns a deploy.
-func (n *Netlify) GetDeploy(ctx context.Context, deployID string, httpClient *http.Client) (*models.Deploy, error) {
+func (n *Netlify) GetDeploy(ctx context.Context, deployID string, httpClient *http.Client, timeout time.Duration) (*models.Deploy, error) {
 	authInfo := context.GetAuthInfo(ctx)
-	resp, err := n.Netlify.Operations.GetDeploy(operations.NewGetDeployParamsWithHTTPClient(httpClient).WithDeployID(deployID), authInfo)
+	resp, err := n.Netlify.Operations.GetDeploy(operations.NewGetDeployParamsWithHTTPClient(httpClient).WithTimeout(timeout).WithDeployID(deployID), authInfo)
 	if err != nil {
 		return nil, err
 	}
@@ -191,13 +191,13 @@ func (n *Netlify) GetDeploy(ctx context.Context, deployID string, httpClient *ht
 
 // DeploySite creates a new deploy for a site given a directory in the filesystem.
 // It uploads the necessary files that changed between deploys.
-func (n *Netlify) DeploySite(ctx context.Context, options DeployOptions, httpClient *http.Client) (*models.Deploy, error) {
-	return n.DoDeploy(ctx, &options, nil, httpClient)
+func (n *Netlify) DeploySite(ctx context.Context, options DeployOptions, httpClient *http.Client, timeout time.Duration) (*models.Deploy, error) {
+	return n.DoDeploy(ctx, &options, nil, httpClient, timeout)
 }
 
 // DoDeploy deploys the changes for a site given a directory in the filesystem.
 // It uploads the necessary files that changed between deploys.
-func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *models.Deploy, httpClient *http.Client) (*models.Deploy, error) {
+func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *models.Deploy, httpClient *http.Client, timeout time.Duration) (*models.Deploy, error) {
 	f, err := os.Stat(options.Dir)
 	if err != nil {
 		return nil, err
@@ -302,7 +302,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 	}
 
 	if deploy == nil {
-		params := operations.NewCreateSiteDeployParamsWithHTTPClient(httpClient).WithSiteID(options.SiteID).WithDeploy(deployFiles)
+		params := operations.NewCreateSiteDeployParamsWithHTTPClient(httpClient).WithTimeout(timeout).WithSiteID(options.SiteID).WithDeploy(deployFiles)
 		if options.Title != "" {
 			params = params.WithTitle(&options.Title)
 		}
@@ -315,7 +315,7 @@ func (n *Netlify) DoDeploy(ctx context.Context, options *DeployOptions, deploy *
 		}
 		deploy = resp.Payload
 	} else {
-		params := operations.NewUpdateSiteDeployParamsWithHTTPClient(httpClient).WithSiteID(options.SiteID).WithDeployID(deploy.ID).WithDeploy(deployFiles)
+		params := operations.NewUpdateSiteDeployParamsWithHTTPClient(httpClient).WithTimeout(timeout).WithSiteID(options.SiteID).WithDeployID(deploy.ID).WithDeploy(deployFiles)
 		resp, err := n.Operations.UpdateSiteDeploy(params, authInfo)
 		if err != nil {
 			if options.Observer != nil {
