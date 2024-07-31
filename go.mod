@@ -1,4 +1,4 @@
-module github.com/netlify/open-api/v2
+module github.com/j0urneyK/open-api/v2
 
 go 1.13
 
