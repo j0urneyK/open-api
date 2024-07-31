@@ -15,9 +15,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/netlify/open-api/v2/go/models"
-	"github.com/netlify/open-api/v2/go/plumbing/operations"
-	"github.com/netlify/open-api/v2/go/porcelain/context"
+	"github.com/j0urneyK/open-api/v2/go/models"
+	"github.com/j0urneyK/open-api/v2/go/plumbing/operations"
+	"github.com/j0urneyK/open-api/v2/go/porcelain/context"
 
 	apiClient "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
@@ -197,12 +197,12 @@ func TestWalk_IgnoreNodeModulesInRoot(t *testing.T) {
 
 	err = os.Mkdir(filepath.Join(dir, "node_modules"), os.ModePerm)
 	require.Nil(t, err)
-	err = ioutil.WriteFile(filepath.Join(dir, "node_modules", "root-package"), []byte{}, 0644)
+	err = ioutil.WriteFile(filepath.Join(dir, "node_modules", "root-package"), []byte{}, 0o644)
 	require.Nil(t, err)
 
 	err = os.MkdirAll(filepath.Join(dir, "more", "node_modules"), os.ModePerm)
 	require.Nil(t, err)
-	err = ioutil.WriteFile(filepath.Join(dir, "more", "node_modules", "inner-package"), []byte{}, 0644)
+	err = ioutil.WriteFile(filepath.Join(dir, "more", "node_modules", "inner-package"), []byte{}, 0o644)
 	require.Nil(t, err)
 
 	files, err := walk(dir, mockObserver{}, false, false)
@@ -228,9 +228,9 @@ func TestWalk_EdgeFunctions(t *testing.T) {
 	require.Nil(t, err)
 	defer os.RemoveAll(edgeFunctionsDir)
 
-	err = ioutil.WriteFile(filepath.Join(edgeFunctionsDir, "manifest.json"), []byte{}, 0644)
+	err = ioutil.WriteFile(filepath.Join(edgeFunctionsDir, "manifest.json"), []byte{}, 0o644)
 	require.Nil(t, err)
-	err = ioutil.WriteFile(filepath.Join(edgeFunctionsDir, "123456789.js"), []byte{}, 0644)
+	err = ioutil.WriteFile(filepath.Join(edgeFunctionsDir, "123456789.js"), []byte{}, 0o644)
 	require.Nil(t, err)
 
 	err = addInternalFilesToDeploy(edgeFunctionsDir, edgeFunctionsInternalPath, files, mockObserver{})
@@ -251,9 +251,9 @@ func TestWalk_PublishedFilesAndEdgeFunctions(t *testing.T) {
 	require.Nil(t, err)
 	defer os.RemoveAll(edgeFunctionsDir)
 
-	err = ioutil.WriteFile(filepath.Join(edgeFunctionsDir, "manifest.json"), []byte{}, 0644)
+	err = ioutil.WriteFile(filepath.Join(edgeFunctionsDir, "manifest.json"), []byte{}, 0o644)
 	require.Nil(t, err)
-	err = ioutil.WriteFile(filepath.Join(edgeFunctionsDir, "123456789.js"), []byte{}, 0644)
+	err = ioutil.WriteFile(filepath.Join(edgeFunctionsDir, "123456789.js"), []byte{}, 0o644)
 	require.Nil(t, err)
 
 	err = addInternalFilesToDeploy(edgeFunctionsDir, edgeFunctionsInternalPath, files, mockObserver{})
@@ -276,7 +276,7 @@ func TestWalk_PublishedFilesAndEdgeRedirects(t *testing.T) {
 	require.Nil(t, err)
 	defer os.RemoveAll(edgeRedirectsDir)
 
-	err = ioutil.WriteFile(filepath.Join(edgeRedirectsDir, "redirects.json"), []byte{}, 0644)
+	err = ioutil.WriteFile(filepath.Join(edgeRedirectsDir, "redirects.json"), []byte{}, 0o644)
 	require.Nil(t, err)
 
 	err = addInternalFilesToDeploy(edgeRedirectsDir, edgeRedirectsInternalPath, files, mockObserver{})
@@ -295,9 +295,9 @@ func setupPublishedAssets(t *testing.T) *deployFiles {
 
 	err = os.Mkdir(filepath.Join(publishDir, "assets"), os.ModePerm)
 	require.Nil(t, err)
-	err = ioutil.WriteFile(filepath.Join(publishDir, "assets", "styles.css"), []byte{}, 0644)
+	err = ioutil.WriteFile(filepath.Join(publishDir, "assets", "styles.css"), []byte{}, 0o644)
 	require.Nil(t, err)
-	err = ioutil.WriteFile(filepath.Join(publishDir, "index.html"), []byte{}, 0644)
+	err = ioutil.WriteFile(filepath.Join(publishDir, "index.html"), []byte{}, 0o644)
 	require.Nil(t, err)
 
 	files, err := walk(publishDir, mockObserver{}, false, false)
@@ -325,8 +325,8 @@ func TestUploadFiles_Cancelation(t *testing.T) {
 	dir, err := ioutil.TempDir("", "deploy")
 	require.NoError(t, err)
 	defer os.RemoveAll(dir)
-	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0644))
-	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "bar.html"), []byte("World"), 0644))
+	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0o644))
+	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "bar.html"), []byte("World"), 0o644))
 
 	files, err := walk(dir, nil, false, false)
 	require.NoError(t, err)
@@ -356,7 +356,7 @@ func TestUploadFiles_Errors(t *testing.T) {
 	dir, err := ioutil.TempDir("", "deploy")
 	require.NoError(t, err)
 	defer os.RemoveAll(dir)
-	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0644))
+	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0o644))
 
 	files, err := walk(dir, nil, false, false)
 	require.NoError(t, err)
@@ -394,7 +394,7 @@ func TestUploadFiles422Error_SkipsRetry(t *testing.T) {
 	dir, err := ioutil.TempDir("", "deploy")
 	require.NoError(t, err)
 	defer os.RemoveAll(dir)
-	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0644))
+	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0o644))
 
 	files, err := walk(dir, nil, false, false)
 	require.NoError(t, err)
@@ -435,7 +435,7 @@ func TestUploadFunctions422Error_SkipsRetry(t *testing.T) {
 	os.MkdirAll(functionsPath, os.ModePerm)
 	require.NoError(t, err)
 	defer os.RemoveAll(dir)
-	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsPath, "foo.js"), []byte("module.exports = () => {}"), 0644))
+	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsPath, "foo.js"), []byte("module.exports = () => {}"), 0o644))
 
 	files, _, _, err := bundle(ctx, functionsPath, mockObserver{})
 	require.NoError(t, err)
@@ -475,7 +475,7 @@ func TestUploadFiles400Error_NoSkipRetry(t *testing.T) {
 	dir, err := ioutil.TempDir("", "deploy")
 	require.NoError(t, err)
 	defer os.RemoveAll(dir)
-	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0644))
+	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "foo.html"), []byte("Hello"), 0o644))
 
 	files, err := walk(dir, nil, false, false)
 	require.NoError(t, err)
@@ -515,8 +515,8 @@ func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 
 	fileBody := []byte("Hello")
 
-	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "a.html"), fileBody, 0644))
-	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "b.html"), fileBody, 0644))
+	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "a.html"), fileBody, 0o644))
+	require.NoError(t, ioutil.WriteFile(filepath.Join(dir, "b.html"), fileBody, 0o644))
 
 	files, err := walk(dir, nil, false, false)
 	require.NoError(t, err)
@@ -533,8 +533,8 @@ func TestUploadFiles_SkipEqualFiles(t *testing.T) {
 	bundleBody, err := ioutil.ReadFile(jsFunctionPath)
 	require.NoError(t, err)
 
-	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsDir, "a.zip"), bundleBody, 0644))
-	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsDir, "b.zip"), bundleBody, 0644))
+	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsDir, "a.zip"), bundleBody, 0o644))
+	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsDir, "b.zip"), bundleBody, 0o644))
 
 	functions, _, _, err := bundle(ctx, functionsDir, mockObserver{})
 	require.NoError(t, err)
@@ -596,7 +596,7 @@ func TestUploadFunctions_RetryCountHeader(t *testing.T) {
 	os.MkdirAll(functionsPath, os.ModePerm)
 	require.NoError(t, err)
 	defer os.RemoveAll(dir)
-	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsPath, "foo.js"), []byte("module.exports = () => {}"), 0644))
+	require.NoError(t, ioutil.WriteFile(filepath.Join(functionsPath, "foo.js"), []byte("module.exports = () => {}"), 0o644))
 
 	files, _, _, err := bundle(ctx, functionsPath, mockObserver{})
 	require.NoError(t, err)
@@ -680,7 +680,7 @@ func TestBundleWithManifest(t *testing.T) {
 		"version": 1
 	}`, jsFunctionPath, pyFunctionPath, goFunctionPath)
 
-	err := ioutil.WriteFile(manifestPath, []byte(manifestFile), 0644)
+	err := ioutil.WriteFile(manifestPath, []byte(manifestFile), 0o644)
 	defer os.Remove(manifestPath)
 	assert.Nil(t, err)
 

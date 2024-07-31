@@ -1,17 +1,19 @@
 package porcelain
 
 import (
-	"github.com/netlify/open-api/v2/go/plumbing"
-	"github.com/netlify/open-api/v2/go/porcelain/http"
+	"github.com/j0urneyK/open-api/v2/go/plumbing"
+	"github.com/j0urneyK/open-api/v2/go/porcelain/http"
 
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 )
 
-const DefaultSyncFileLimit = 500
-const DefaultConcurrentUploadLimit = 10
-const DefaultRetryAttempts = 3
+const (
+	DefaultSyncFileLimit         = 500
+	DefaultConcurrentUploadLimit = 10
+	DefaultRetryAttempts         = 3
+)
 
 // Default netlify HTTP client.
 var Default = NewHTTPClient(nil)

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/netlify/open-api/v2/go/models"
-	"github.com/netlify/open-api/v2/go/plumbing/operations"
-	"github.com/netlify/open-api/v2/go/porcelain/context"
+	"github.com/j0urneyK/open-api/v2/go/models"
+	"github.com/j0urneyK/open-api/v2/go/plumbing/operations"
+	"github.com/j0urneyK/open-api/v2/go/porcelain/context"
 
 	"github.com/sirupsen/logrus"
 )
@@ -19,7 +19,6 @@ const (
 func (n *Netlify) CreateTicket(ctx context.Context, clientID string) (*models.Ticket, error) {
 	params := operations.NewCreateTicketParams().WithClientID(clientID)
 	resp, err := n.Netlify.Operations.CreateTicket(params, context.GetAuthInfo(ctx))
-
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +29,6 @@ func (n *Netlify) CreateTicket(ctx context.Context, clientID string) (*models.Ti
 func (n *Netlify) ShowTicket(ctx context.Context, ticketID string) (*models.Ticket, error) {
 	params := operations.NewShowTicketParams().WithTicketID(ticketID)
 	resp, err := n.Netlify.Operations.ShowTicket(params, context.GetAuthInfo(ctx))
-
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +39,6 @@ func (n *Netlify) ShowTicket(ctx context.Context, ticketID string) (*models.Tick
 func (n *Netlify) ExchangeTicket(ctx context.Context, ticketID string) (*models.AccessToken, error) {
 	params := operations.NewExchangeTicketParams().WithTicketID(ticketID)
 	resp, err := n.Netlify.Operations.ExchangeTicket(params, context.GetAuthInfo(ctx))
-
 	if err != nil {
 		return nil, err
 	}

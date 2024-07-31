@@ -1,6 +1,6 @@
 package porcelain
 
-import "github.com/netlify/open-api/v2/go/models"
+import "github.com/j0urneyK/open-api/v2/go/models"
 
 // https://github.com/netlify/zip-it-and-ship-it/blob/main/src/manifest.ts
 type functionsManifest struct {

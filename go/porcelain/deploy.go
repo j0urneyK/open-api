@@ -27,9 +27,9 @@ import (
 	"github.com/rsc/goversion/version"
 	"github.com/sirupsen/logrus"
 
-	"github.com/netlify/open-api/v2/go/models"
-	"github.com/netlify/open-api/v2/go/plumbing/operations"
-	"github.com/netlify/open-api/v2/go/porcelain/context"
+	"github.com/j0urneyK/open-api/v2/go/models"
+	"github.com/j0urneyK/open-api/v2/go/plumbing/operations"
+	"github.com/j0urneyK/open-api/v2/go/porcelain/context"
 )
 
 const (
