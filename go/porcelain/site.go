@@ -31,9 +31,9 @@ func (n *Netlify) ListSites(ctx context.Context, params *operations.ListSitesPar
 }
 
 // GetSite returns a site.
-func (n *Netlify) GetSite(ctx context.Context, siteID string) (*models.Site, error) {
+func (n *Netlify) GetSite(ctx context.Context, siteID string, httpClient *http.Client, timeout time.Duration) (*models.Site, error) {
 	authInfo := context.GetAuthInfo(ctx)
-	resp, err := n.Netlify.Operations.GetSite(operations.NewGetSiteParams().WithSiteID(siteID), authInfo)
+	resp, err := n.Netlify.Operations.GetSite(operations.NewGetSiteParamsWithHTTPClient(httpClient).WithTimeout(timeout).WithSiteID(siteID), authInfo)
 	if err != nil {
 		return nil, err
 	}
